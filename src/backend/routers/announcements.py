@@ -2,7 +2,7 @@
 Announcement endpoints for the High School Management System API
 """
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
 from typing import List, Optional
 from datetime import datetime
 from ..database import announcements_collection
