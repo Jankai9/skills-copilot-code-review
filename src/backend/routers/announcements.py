@@ -35,12 +35,17 @@ def get_announcements(
     now = datetime.now()
     query = {}
     if active_only:
-        query["expiration_date"] = {"$gte": now}
-        # Optionally filter by start_date
-        query["$or"] = [
-            {"start_date": {"$lte": now}},
-            {"start_date": None},
-            {"start_date": {"$exists": False}}
+        # An announcement is active if it is not expired AND
+        # either has started or has no defined start date.
+        query["$and"] = [
+            {"expiration_date": {"$gte": now}},
+            {
+                "$or": [
+                    {"start_date": {"$lte": now}},
+                    {"start_date": None},
+                    {"start_date": {"$exists": False}},
+                ]
+            },
         ]
     anns = [announcement_serializer(a) for a in announcements_collection.find(query)]
     return anns
